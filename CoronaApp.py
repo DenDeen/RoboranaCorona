@@ -65,16 +65,29 @@ Prediction when a certain percentage of belgium is vaccinated:
 left_column, right_column = st.beta_columns(2)
 
 with right_column:
+  filtered_results = results[["date", "percentage"]]
+  filtered_results = filtered_results[filtered_results['percentage'] <= 1]
+
   slider = st.slider(
       '',
       13, 100, (70)
   )
+<<<<<<< HEAD
+
+  @st.cache  # 👈 Added this
+  def get_date(slider):
+    return filtered_results[filtered_results['percentage'] <= (slider/100)], filtered_results[filtered_results['percentage'] <= (slider/100)].iloc[-1]["date"]
+  
+  slider_results, p_date = get_date(slider)
+
+=======
 
   filtered_results = results[["date", "percentage"]]
   filtered_results = filtered_results[filtered_results['percentage'] <= 1]
 
   slider_results = filtered_results[filtered_results['percentage'] <= (slider/100)]
   p_date = slider_results.iloc[-1]["date"]
+>>>>>>> 18baeac84d9c35a2c8b7a0fedc2f3a3977a3b761
   st.write(str(slider) + "% will be vaccinated by: " + p_date.strftime('%d/%m/%Y'))
 
   p_date = date(
@@ -88,8 +101,16 @@ with right_column:
   delta_begin = p_date - f_date
 
   st.write("There are " + str(delta_now.days) + " days left.")
+<<<<<<< HEAD
+
+  
 
 with left_column:
+
+=======
+
+with left_column:
+>>>>>>> 18baeac84d9c35a2c8b7a0fedc2f3a3977a3b761
   chart_weekly_total_1 = alt.Chart(filtered_results).mark_line(color="darkgreen").encode(
     x=alt.X('date:T', axis=alt.Axis(title='')),
     y=alt.Y('percentage:Q', axis=alt.Axis(format='%', title=''))
