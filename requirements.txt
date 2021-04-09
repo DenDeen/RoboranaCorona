@@ -1,0 +1,7 @@
+altair==4.1.0
+numpy==1.19.2
+joblib==0.14.1
+pandas==1.2.3
+streamlit==0.79.0
+inference_schema==1.1.0
+datetime==4.3
