@@ -3,7 +3,8 @@ import altair as alt
 import pandas as pd
 import numpy as np
 import time
-from datetime import date
+from datetime import date, datetime
+
 
 results = pd.read_csv('administered_result.csv')
 results['date'] = pd.to_datetime(results['date'])
@@ -25,9 +26,24 @@ st.subheader("""
 Predicted amount of vaccinations in Belgium:
 """)
 filtered_results = results[["date", "first_dose"]]
-filtered_results.columns = ["date","Sum of first vaccinations"]
-filtered_results = filtered_results.groupby(pd.Grouper(key='date', freq='W'), as_index=True).sum()
-chart_weekly_total = st.bar_chart(filtered_results)
+filtered_results = filtered_results.groupby(pd.Grouper(key='date', freq='W')).sum().reset_index()
+chart_weekly_total = alt.Chart(filtered_results).mark_area(
+  line={'color':'darkgreen'},
+    color=alt.Gradient(
+        gradient='linear',
+        stops=[alt.GradientStop(color='#7eb92f', offset=1),
+               alt.GradientStop(color='#397648', offset=0)],
+        x1=1,
+        x2=0,
+        y1=1,
+        y2=1
+        )
+).encode(
+  x=alt.X('date:T', axis=alt.Axis(title='')),
+  y=alt.Y('first_dose:Q', axis=alt.Axis(title='Total doses per week'))
+).interactive()
+st.altair_chart(chart_weekly_total, use_container_width=True)
+
 
 st.subheader("""
 Predicted amount of first vaccinations per region in Belgium:
@@ -40,10 +56,6 @@ chart_weekly_regionally = alt.Chart(filtered_results).mark_line().encode(
   color=alt.Color("Regions:N")
 ).interactive()
 st.altair_chart(chart_weekly_regionally, use_container_width=True)
-
-filtered_results = results[["date", "first_dose"]]
-filtered_results = filtered_results.groupby(pd.Grouper(key='date', freq='W'), as_index=True).sum()
-st.write(len(filtered_results))
 
 
 st.subheader("""
@@ -62,16 +74,39 @@ with right_column:
   filtered_results = filtered_results[filtered_results['percentage'] <= 1]
 
   slider_results = filtered_results[filtered_results['percentage'] <= (slider/100)]
-  p_date = str(slider) + "% will be vaccinated by: " + slider_results.iloc[-1]["date"].strftime('%d/%m/%Y')
-  st.write(p_date)
+  p_date = slider_results.iloc[-1]["date"]
+  st.write(str(slider) + "% will be vaccinated by: " + p_date.strftime('%d/%m/%Y'))
+
+  p_date = date(
+    year=p_date.year, 
+    month=p_date.month,
+    day=p_date.day,
+  )
+  n_date = date.today()
+  f_date = date(2020, 12, 28)
+  delta_now = p_date - n_date
+  delta_begin = p_date - f_date
+
+  st.write("There are " + str(delta_now.days) + " days left.")
 
 with left_column:
-  chart_weekly_total_1 = alt.Chart(filtered_results).mark_line().encode(
+  chart_weekly_total_1 = alt.Chart(filtered_results).mark_line(color="darkgreen").encode(
     x=alt.X('date:T', axis=alt.Axis(title='')),
     y=alt.Y('percentage:Q', axis=alt.Axis(format='%', title=''))
   )
 
-  chart_weekly_total_2 = alt.Chart(slider_results).mark_area().encode(
+  chart_weekly_total_2 = alt.Chart(slider_results).mark_area(
+    line={'color':'darkgreen'},
+    color=alt.Gradient(
+        gradient='linear',
+        stops=[alt.GradientStop(color='#7eb92f', offset=1),
+               alt.GradientStop(color='#397648', offset=0)],
+        x1=1,
+        x2=0,
+        y1=1,
+        y2=1
+        )
+  ).encode(
     x='date:T',
     y=alt.Y('percentage:Q', axis=alt.Axis(format='%'))
   )
@@ -79,18 +114,7 @@ with left_column:
   st.altair_chart(chart_weekly_total_1 + chart_weekly_total_2, use_container_width=True)
 
 
-st.subheader("""
-How many days left?
-""")
 
-f_date = date(2020, 12, 28)
-n_date = date.today()
-l_date = date(2021, 9, 28)
-delta_now = l_date - n_date
-delta_begin = l_date - f_date
-
-my_bar = st.progress(delta_now.days / delta_begin.days)
-st.write("There are " + str(delta_now.days) + " days left till 70% of the population is vaccinated.")
 
 
 #TODO Push out to web
