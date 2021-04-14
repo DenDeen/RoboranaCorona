@@ -28,7 +28,6 @@ with right_column:
     return filtered_results[filtered_results['percentage'] <= (slider/100)], filtered_results[filtered_results['percentage'] <= (slider/100)].iloc[-1]["date"]
   
   slider_results, p_date = get_date(slider)
-
   st.write(str(slider) + "% will be vaccinated by: " + p_date.strftime('%d/%m/%Y'))
 
   p_date = date(
@@ -43,10 +42,7 @@ with right_column:
 
   st.write("There are " + str(delta_now.days) + " days left.")
 
- 
-
 with left_column:
-
   chart_weekly_total_1 = alt.Chart(filtered_results).mark_line(color="darkgreen").encode(
     x=alt.X('date:T', axis=alt.Axis(title='')),
     y=alt.Y('percentage:Q', axis=alt.Axis(format='%', title=''))
@@ -66,7 +62,7 @@ with left_column:
   ).encode(
     x='date:T',
     y=alt.Y('percentage:Q', axis=alt.Axis(format='%'))
-  )
+  ).interactive()
 
   st.altair_chart(chart_weekly_total_1 + chart_weekly_total_2, use_container_width=True)
 
