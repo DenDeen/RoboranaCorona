@@ -1,1 +1,14 @@
-<_io.TextIOWrapper name='administered_result.csv' mode='r' encoding='cp1252'>
+            date  first_dose      region  cumulative_sum
+0     2020-12-28       56.00    Brussels           56.00
+1     2020-12-28      123.00    Flanders          179.00
+2     2020-12-28      119.00    Wallonia          298.00
+3     2020-12-29        1.00    Flanders          299.00
+4     2020-12-30        5.00    Brussels          304.00
+...          ...         ...         ...             ...
+1909  2022-04-29     9166.17    Wallonia     15105187.10
+1910  2022-04-30    13447.10    Brussels     15118634.20
+1911  2022-04-30     9796.43    Flanders     15128430.64
+1912  2022-04-30     1635.72  Ostbelgien     15130066.36
+1913  2022-04-30     5816.66    Wallonia     15135883.02
+
+[1914 rows x 4 columns]
