@@ -105,7 +105,7 @@ st.header("Percentage vaccinated per country")
 date = st.date_input('Choose date')
 
 all_results = results[["date", "country", "percentage"]]
-all_results = results[results['date']<date].groupby('country').tail(1)
+all_results = results[results['date'].dt.date<date].groupby('country').tail(1)
 
 mark_bar = alt.Chart(all_results).mark_bar(
   cornerRadiusTopLeft=3,
