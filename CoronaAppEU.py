@@ -120,8 +120,13 @@ mark_bar = alt.Chart(all_results).mark_bar(
 st.altair_chart(mark_bar, use_container_width=True)
 
 
-st.header("Data")
+st.header("Data used")
+st.write("Country specific data:")
+results_country
+st.write("Percentage done by date:")
 all_results
+st.write("Fully generated dataset:")
+results
 
 
 
