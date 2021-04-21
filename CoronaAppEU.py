@@ -10,6 +10,7 @@ results = pd.read_csv('corona_dataset_eu_result.csv')
 results['date'] = pd.to_datetime(results['date'])
 
 st.header("Corona Vaccination Progress Prediction")
+st.write("By Mikkel Skovdal")
 st.header(" ")
 
 selectbox = st.sidebar.selectbox(
@@ -123,7 +124,7 @@ st.header("Data")
 all_results
 
 
-st.write("By Mikkel Skovdal")
+
 
 #TODO grafiek waar je kan aanduiden welke landen je wilt nakijken
 #TODO Sexes vergelijken
