@@ -128,7 +128,7 @@ all_results = all_results[['country', 'percentage']].set_index('country')
 all_results
 st.write("Fully generated dataset:")
 results
-st.write("Fully orignal generated dataset:")
+st.write("Fully original generated dataset:")
 results_original = pd.read_csv('corona_dataset_eu_original.csv')
 results_original
 
