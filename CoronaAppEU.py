@@ -107,6 +107,7 @@ date = st.date_input('Choose date')
 
 all_results = results[["date", "country", "percentage"]]
 all_results = results[results['date'].dt.date<date].groupby('country').tail(1)
+selection = alt.selection_multi(fields=['country'], bind='legend')
 
 mark_bar = alt.Chart(all_results).mark_bar(
   cornerRadiusTopLeft=3,
@@ -114,8 +115,12 @@ mark_bar = alt.Chart(all_results).mark_bar(
 ).encode(
   x=alt.X('country:N', axis=alt.Axis(title='')),
   y=alt.Y('percentage:Q', axis=alt.Axis(format='%', title='')),
-  color='country:N'
+  color='country:N',
+  opacity=alt.condition(selection, alt.value(1), alt.value(0.2))
+).add_selection(
+    selection
 )
+
 
 st.altair_chart(mark_bar, use_container_width=True)
 
