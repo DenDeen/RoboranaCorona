@@ -136,10 +136,3 @@ results
 st.write("Fully original generated dataset:")
 results_original = pd.read_csv('corona_dataset_eu_original.csv')
 results_original
-
-
-#TODO grafiek waar je kan aanduiden welke landen je wilt nakijken
-#TODO Sexes vergelijken
-#TODO Push to web
-#TODO Grafieken maken
-#TODO procentuele vaccinatie versnelling
