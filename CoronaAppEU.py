@@ -145,8 +145,8 @@ def plot_chart(temp_results):
         stroke='white',
         strokeWidth=1
     ).encode(
-        color = alt.Color("percentage:Q", scale=alt.Scale(domain=[0, 1], scheme="greens")),
-        tooltip=["properties.geounit:N"]
+        color = alt.Color("percentage:Q", legend=alt.Legend(format=".0%"), scale=alt.Scale(domain=[0, 1], scheme="greens")),
+        tooltip=[alt.Tooltip('properties.geounit:N', title='region'), alt.Tooltip('percentage:Q', format='.2%')]
     ).transform_lookup(
         lookup='properties.geounit',
         from_=alt.LookupData(temp_results, 'country', variable_list)
