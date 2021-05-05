@@ -29,7 +29,7 @@ st.header("1. Vaccination progress per country")
 st.write("")
 initial_value = 1
 date_selected = st.empty()
-value = date_selected.slider("Select which week", 1, 52, initial_value, 1, key="initial")
+value = date_selected.slider("Select week:", 1, 52, initial_value, 1, key="initial")
 
 current_date = date(2021, 1, 1) + timedelta(days=7*(value-1))
 
@@ -100,7 +100,7 @@ with right_column:
       1, 100, (70)
   )
 
-  @st.cache
+  @st.cache()
   def get_date(slider):
     return filtered_results[filtered_results['percentage'] <= (slider/100)], filtered_results[filtered_results['percentage'] <= (slider/100)].iloc[-1]["date"]
   
@@ -149,28 +149,40 @@ with left_column:
 st.header("3. The vaccination race")
 st.write("")
 st.write("The current winners:")
-temp_results = results[results['date'].dt.date<current_date].groupby('country').tail(1).sort_values(by='percentage', ascending=False)
-temp_results.loc[temp_results['percentage'] > 1, 'percentage'] = 1
-temp_results['percentage'] = pd.Series([round(val, 4) for val in temp_results['percentage']], index = temp_results.index)
-temp_results['percentage vaccinated'] = pd.Series(["{0:.2f}%".format(val * 100) for val in temp_results['percentage']], index = temp_results.index)
-temp_results = temp_results[["country", "percentage vaccinated"]]
-temp_results = temp_results.drop(temp_results[(temp_results.country == 'Northern Ireland') | (temp_results.country == 'Wales') | (temp_results.country == 'Scotland') | (temp_results.country == 'England')].index)
-temp_results = temp_results.head(3)
-temp_results.index = np.arange(1, len(temp_results) + 1)
-temp_results
+
+@st.cache()
+def calculate_current_winners():
+  temp_results_winners = results[results['date'].dt.date<date.today()].groupby('country').tail(1).sort_values(by='percentage', ascending=False)
+  temp_results_winners.loc[temp_results_winners['percentage'] > 1, 'percentage'] = 1
+  temp_results_winners['percentage'] = pd.Series([round(val, 4) for val in temp_results_winners['percentage']], index = temp_results_winners.index)
+  temp_results_winners['percentage vaccinated'] = pd.Series(["{0:.2f}%".format(val * 100) for val in temp_results_winners['percentage']], index = temp_results_winners.index)
+  temp_results_winners = temp_results_winners[["country", "percentage vaccinated"]]
+  temp_results_winners = temp_results_winners.drop(temp_results_winners[(temp_results_winners.country == 'Northern Ireland') | (temp_results_winners.country == 'Wales') | (temp_results_winners.country == 'Scotland') | (temp_results_winners.country == 'England')].index)
+  temp_results_winners = temp_results_winners.head(3)
+  temp_results_winners.index = np.arange(1, len(temp_results_winners) + 1)
+  return temp_results_winners
+
+winners = calculate_current_winners()
+winners
 
 st.write("The predicted winners:")
-temp_results_predicted = temp_results.iloc[0:0]
-current_date = date.today()
-while(len(temp_results_predicted)<3):
-    current_date += timedelta(days=1)
-    temp_results_predicted = results[results['date'].dt.date<current_date].groupby('country').tail(1).sort_values(by='percentage', ascending=False)
-    temp_results_predicted = temp_results_predicted[temp_results_predicted.percentage >= 1]
-    temp_results_predicted = temp_results_predicted.drop(temp_results_predicted[(temp_results_predicted.country == 'Northern Ireland') | (temp_results_predicted.country == 'Wales') | (temp_results_predicted.country == 'Scotland') | (temp_results_predicted.country == 'England')].index)
-    temp_results_predicted = temp_results_predicted[["country"]]
 
-temp_results_predicted.index = np.arange(1, len(temp_results) + 1)
-temp_results_predicted
+@st.cache(allow_output_mutation=True)
+def calculate_future_winners(current_date):
+  temp_results_predicted = results[results['date'].dt.date<current_date].groupby('country').tail(1).sort_values(by='percentage', ascending=False)
+  temp_results_predicted = temp_results_predicted[temp_results_predicted.percentage >= 1]
+  temp_results_predicted = temp_results_predicted.drop(temp_results_predicted[(temp_results_predicted.country == 'Northern Ireland') | (temp_results_predicted.country == 'Wales') | (temp_results_predicted.country == 'Scotland') | (temp_results_predicted.country == 'England')].index)
+  temp_results_predicted = temp_results_predicted[["country"]]
+  return temp_results_predicted
+
+future_winners = winners.iloc[0:0]
+current_date = date.today()
+while(len(future_winners)<3):
+    current_date += timedelta(days=1)
+    future_winners = calculate_future_winners(current_date)
+
+future_winners.index = np.arange(1, len(future_winners) + 1)
+future_winners
 
 # 4. PERCENTAGE VACCINATED PER COUNTRY
 st.header("4. Percentage vaccinated per country")
