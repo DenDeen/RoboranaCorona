@@ -76,15 +76,15 @@ chart.altair_chart(plot_chart())
 
 # MAP ANIMATION
 if st.button('Let the fun begin!'):
-    for i in range(52):
-        current_date = date(2021, 1, 1) + timedelta(days=7*i)
-        date_text.write("Visualized date: " + str(current_date))
-        percentage_text.write("Percentage vaccinated in " + selectbox + ": " + get_percentage())
-        value = date_selected.slider("Select which week", 1, 52, i+1, 1, key="animated")
-        chart.altair_chart(plot_chart())
-        # Pretend we're doing some computation that takes time.
-        time.sleep(0.15)
-    st.balloons()
+  for i in range(52):
+      current_date = date(2021, 1, 1) + timedelta(days=7*i)
+      date_text.write("Visualized date: " + str(current_date))
+      percentage_text.write("Percentage vaccinated in " + selectbox + ": " + get_percentage())
+      value = date_selected.slider("Select which week", 1, 52, i+1, 1, key="animated")
+      chart.altair_chart(plot_chart())
+      # Pretend we're doing some computation that takes time.
+      time.sleep(0.15)
+  st.balloons()
 
 # 2. THE COUNTRY SLIDER
 st.header("2. Vaccination progress of " + selectbox)
@@ -130,14 +130,14 @@ with left_column:
   chart_weekly_total_2 = alt.Chart(slider_results).mark_area(
     line={'color':'darkgreen'},
     color=alt.Gradient(
-        gradient='linear',
-        stops=[alt.GradientStop(color='#7eb92f', offset=1),
-               alt.GradientStop(color='#397648', offset=0)],
-        x1=1,
-        x2=0,
-        y1=1,
-        y2=1
-        )
+      gradient='linear',
+      stops=[alt.GradientStop(color='#7eb92f', offset=1),
+             alt.GradientStop(color='#397648', offset=0)],
+      x1=1,
+      x2=0,
+      y1=1,
+      y2=1
+      )
   ).encode(
     x='date:T',
     y=alt.Y('percentage:Q', axis=alt.Axis(format='%'))
@@ -178,8 +178,8 @@ def calculate_future_winners(current_date):
 future_winners = winners.iloc[0:0]
 current_date = date.today()
 while(len(future_winners)<3):
-    current_date += timedelta(days=1)
-    future_winners = calculate_future_winners(current_date)
+  current_date += timedelta(days=1)
+  future_winners = calculate_future_winners(current_date)
 
 future_winners.index = np.arange(1, len(future_winners) + 1)
 future_winners
@@ -215,16 +215,16 @@ acceleration_results = acceleration_results[:-1].reset_index()
 acceleration_chart = alt.Chart(acceleration_results).mark_area(
   line={'color':'darkgreen'},
     color=alt.Gradient(
-        gradient='linear',
-        stops=[alt.GradientStop(color='#7eb92f', offset=1),
-               alt.GradientStop(color='#397648', offset=0)],
-        x1=1,
-        x2=0,
-        y1=1,
-        y2=1
-        )
+      gradient='linear',
+      stops=[alt.GradientStop(color='#7eb92f', offset=1),
+             alt.GradientStop(color='#397648', offset=0)],
+      x1=1,
+      x2=0,
+      y1=1,
+      y2=1
+      )
 ).encode(
-    x=alt.X('date:T', axis=alt.Axis(title='')),
+  x=alt.X('date:T', axis=alt.Axis(title='')),
   y=alt.Y('difference:Q', axis=alt.Axis(format='%', title=''))
 )
 st.altair_chart(acceleration_chart, use_container_width=True)
