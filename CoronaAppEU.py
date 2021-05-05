@@ -12,7 +12,6 @@ source = alt.topo_feature(url, 'continent_Europe_subunits')
 
 results = pd.read_csv('corona_dataset_eu_result.csv')
 results['date'] = pd.to_datetime(results['date'])
-results = results.replace(to_replace=r'Netherlands', value='the Netherlands', regex=True)
 
 st.title("Corona Vaccination Progress Prediction")
 st.write("By Mikkel Skovdal")
@@ -21,6 +20,7 @@ selectbox = st.sidebar.selectbox(
     'What region would you like to see the data of?',
     np.sort(results.country.unique())
 )
+
 results_country = results[results['country'] == selectbox]
 
 # 1. THE MAP
@@ -49,7 +49,10 @@ def get_percentage():
 date_text = st.empty()
 date_text.write("Visualized date: " + str(current_date))
 percentage_text = st.empty()
-percentage_text.write("Percentage vaccinated in " + selectbox + ": " + get_percentage())
+if (selectbox == "Netherlands"):
+  percentage_text.write("Percentage vaccinated in the " + selectbox + ": " + get_percentage())
+else:
+  percentage_text.write("Percentage vaccinated in " + selectbox + ": " + get_percentage())
 
 # MAP CREATION
 def plot_chart(): 
