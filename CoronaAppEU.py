@@ -235,3 +235,6 @@ acceleration_chart = alt.Chart(acceleration_results).mark_area(
   y=alt.Y('difference:Q', axis=alt.Axis(format='%', title=''))
 )
 st.altair_chart(acceleration_chart, use_container_width=True)
+
+st.write("Source data: ")
+st.write('https://ourworldindata.org/coronavirus-source-data')
