@@ -90,7 +90,11 @@ if st.button('Let the fun begin!'):
   st.balloons()
 
 # 2. THE COUNTRY SLIDER
-st.header("2. Vaccination progress of " + selectbox)
+if (selectbox == "Netherlands"):
+  st.header("2. Vaccination progress of the " + selectbox)
+else:
+  st.header("2. Vaccination progress of " + selectbox)
+
 st.write("")
 # COLUMN CREATION
 left_column, right_column = st.beta_columns(2)
